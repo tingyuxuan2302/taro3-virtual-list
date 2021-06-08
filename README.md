@@ -1,10 +1,54 @@
 # 基于Taro3的虚拟列表
 
-## 遇到的问题
+## 使用方法
+```
+import { TaroVirtualList } from 'taro-virtual-list'
+
+export default function Demo(): JSX.Element {
+  const [list, setList] = useState<number[]>([])
+
+  useEffect(() => {
+    const arr: number[] = []
+    Array(84).fill(0).forEach((item, index) => {
+      arr.push(index)
+    })
+    setList(arr)
+  }, [])
+  const renderFunc = (item, index, pageIndex) => {
+    return (
+      <View className="el">{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
+    )
+  }
+  const handleBottom = () => {
+    console.log('触底了')
+  }
+  const handleComplete = () => {
+    console.log('加载完成')
+  }
+  return (
+    <View>
+      <TaroVirtualList
+        list={list}
+        onRender={renderFunc}
+        onBottom={handleBottom}
+        onComplete={handleComplete}
+        scrollViewProps={{
+          style: {
+            "height": '100vh',
+          },
+        }}
+      />
+    </View>
+  )
+
+}
+```
+
+## 为啥要开发该组件
 1. 列表页数据量过多，一次性渲染完成后页面节点数量过大，造成页面渲染卡顿，渲染完成之后操作页面数据也会异常卡顿；
 2. 官方虚拟列表（3.2.1）存在一定的渲染bug，特别是针对**列表节点不等高**，存在诸多问题，比如节点闪动、滚动过快造成无限加载、白屏率较高等；
 
-## 适用场景（该组件）
+## 该组件适用场景
 1. 页面节点渲染较多（主要是列表页）；
 2. 针对列表页**节点不等高**具有更好的支持；
 
