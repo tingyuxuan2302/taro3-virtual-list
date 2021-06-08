@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 
 class App extends Component {
   // 在 App 类中的 render() 函数没有实际作用

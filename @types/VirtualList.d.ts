@@ -15,6 +15,10 @@ export interface VirtualListProps extends BaseComponent {
    */
   segmentNum: number;
   /**
+   * 组件内部是否需要根据list数据变化自动滚动至列表顶部
+   */
+  autoScrollTop: boolean;
+  /**
    * 指定页面显示区域基准值，例如2，则组件会监听 2 * scrollHeight高度的上下区域(该值会影响页面真实节点的渲染数量)
    */
   screenNum: number;

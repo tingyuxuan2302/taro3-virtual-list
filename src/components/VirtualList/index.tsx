@@ -9,6 +9,7 @@ import { VirtualListProps, VirtualListState } from "../../../@types/VirtualList"
  * @param	{Array}	list  列表数据
  * @param	{String}	listId  虚拟列表唯一id（防止同一个页面有多个虚拟列表导致渲染错乱）
  * @param	{Number}	segmentNum  自定义分段的数量，默认10
+ * @param	{Boolean}	autoScrollTop  组件内部是否需要根据list数据变化自动滚动至列表顶部
  * @param	{Number}	screenNum  指定页面显示区域基准值，例如2，则组件会监听 2 * scrollHeight高度的上下区域(该值会影响页面真实节点的渲染数量)
  * @param	{Object}	scrollViewProps  scrollView的参数
  * @param	{Function}	onBottom  二维列表是否已经触底回调
@@ -193,6 +194,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       onRender,
       listId,
       className,
+      autoScrollTop,
     } = this.props
 
     const scrollStyle = {
@@ -203,7 +205,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       <ScrollView
         scrollY
         id={listId}
-        scrollTop={isScrollTop ? 0 : ''}
+        scrollTop={autoScrollTop && isScrollTop ? 0 : ''}
         style={scrollStyle}
         onScrollToLower={this.renderNext}
         lowerThreshold={250}
@@ -211,7 +213,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         {...scrollViewProps}
       >
         {onRenderTop?.()}
-        <View className='zt-main-list'>
+        <View className="zt-main-list">
           {
             twoList?.map((item, pageIndex) => {
               return (
@@ -247,6 +249,7 @@ VirtialList.defaultProps = {
   screenNum: 2,
   scrollViewProps: {},
   className: "",
+  autoScrollTop: true,
   onRender: function render() {
     return (<View />)
   },
@@ -257,6 +260,7 @@ VirtialList.propTypes = {
   listId: PropTypes.string,
   segmentNum: PropTypes.number,
   screenNum: PropTypes.number,
+  autoScrollTop: PropTypes.bool,
   scrollViewProps: PropTypes.object,
   onRender: PropTypes.func.isRequired,
   onBottom: PropTypes.func,

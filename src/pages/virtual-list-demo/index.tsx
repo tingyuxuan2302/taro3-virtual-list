@@ -4,11 +4,11 @@ import VirtualList from '../../components/VirtualList'
 
 import './index.scss'
 
-export default function Demo() {
-  const [list, setList] = useState([])
+export default function Demo(): JSX.Element {
+  const [list, setList] = useState<number[]>([])
 
   useEffect(() => {
-    const arr = []
+    const arr: number[] = []
     Array(84).fill(0).forEach((item, index) => {
       arr.push(index)
     })
@@ -16,7 +16,7 @@ export default function Demo() {
   }, [])
   const renderFunc = (item, index, pageIndex) => {
     return (
-      <View className='el'>{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
+      <View className="el">{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
     )
   }
   const handleBottom = () => {
