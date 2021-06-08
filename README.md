@@ -5,8 +5,10 @@
 import { TaroVirtualList } from 'taro-virtual-list'
 
 export default function Demo(): JSX.Element {
+  // 模拟list数据
   const [list, setList] = useState<number[]>([])
 
+  // 设置list
   useEffect(() => {
     const arr: number[] = []
     Array(84).fill(0).forEach((item, index) => {
@@ -14,6 +16,7 @@ export default function Demo(): JSX.Element {
     })
     setList(arr)
   }, [])
+  // 渲染列表Item
   const renderFunc = (item, index, pageIndex) => {
     return (
       <View className="el">{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
@@ -67,7 +70,7 @@ export default function Demo(): JSX.Element {
 ### Events
 | 参数 | 回调参数 | 默认值 | 必填 | 说明 |
 | --- | :----: | ---- | ---- | ------ |
-| onRender | (item, index, segmentIndex) => {}<br>item: 列表的单个数据项的值;<br> index：列表的单个数据项的index;<br>segmentIndex：当前屏幕的index | - | 列表的渲染回调，用于自定义列表Item | - | 列表的渲染回调，用于自定义列表Item |
+| onRender | (item, index, segmentIndex) => {}<br>item: 列表的单个数据项的值;<br> index：列表的单个数据项的index;<br>segmentIndex：当前二维数组维度的index | - | 列表的渲染回调，用于自定义列表Item | - | 列表的渲染回调，用于自定义列表Item |
 | onBottom | - | - | 否 | 列表是否已经触底回调 |
 | onComplete | - | - | 否 | 列表是否已经把全部数据加载完成的回调 |
 | onRenderTop | - | - | 否 | 列表上部分内容渲染回调，用于渲染插入虚拟列表上边的内容 |
