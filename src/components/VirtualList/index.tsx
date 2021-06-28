@@ -77,8 +77,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   formatList(list: [], isReRender = false): void {
     const { segmentNum } = this.props
     if (!list || !list.length) {
-      // 没有数据
-      this.handleComplete()
+      // 初始化没有数据
       return
     }
     let arr: any[] = []
@@ -98,6 +97,11 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         // 如果数据量少，不足一个segmentNum，则触发完成回调
         this.handleComplete()
       }
+    }
+    if (!_list.length) {
+      // 没数据
+      this.handleComplete()
+      return
     }
     this.initList = _list
     this.setState({

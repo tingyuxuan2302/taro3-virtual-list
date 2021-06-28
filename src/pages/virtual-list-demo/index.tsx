@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import VirtualList from '../../components/VirtualList'
 
@@ -9,7 +10,7 @@ export default function Demo(): JSX.Element {
 
   useEffect(() => {
     const arr: number[] = []
-    Array(84).fill(0).forEach((item, index) => {
+    Array(34).fill(0).forEach((item, index) => {
       arr.push(index)
     })
     setList(arr)
@@ -24,6 +25,14 @@ export default function Demo(): JSX.Element {
   }
   const handleComplete = () => {
     console.log('加载完成')
+    Taro.showToast({
+      title: "到底啦～",
+    })
+  }
+  const renderBottom = () => {
+    return (
+      <View>我是底部内容！！！！</View>
+    )
   }
   return (
     <View>
@@ -32,6 +41,7 @@ export default function Demo(): JSX.Element {
         onRender={renderFunc}
         onBottom={handleBottom}
         onComplete={handleComplete}
+        onRenderBottom={renderBottom}
         scrollViewProps={{
           style: {
             "height": '100vh',

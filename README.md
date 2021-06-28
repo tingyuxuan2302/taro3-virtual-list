@@ -5,17 +5,6 @@
 import { TaroVirtualList } from 'taro-virtual-list'
 
 export default function Demo(): JSX.Element {
-  // 模拟list数据
-  const [list, setList] = useState<number[]>([])
-
-  // 设置list
-  useEffect(() => {
-    const arr: number[] = []
-    Array(84).fill(0).forEach((item, index) => {
-      arr.push(index)
-    })
-    setList(arr)
-  }, [])
   // 渲染列表Item
   const renderFunc = (item, index, pageIndex) => {
     return (
@@ -78,9 +67,13 @@ export default function Demo(): JSX.Element {
 
 ## 注意事项
 1. onRenderBottom渲染的内容会在虚拟列表所有数据渲染完成之后才会调用
-2. 设置scrollViewProps参数的时候请注意：
+2. 该组件默认支持拿到全部数据进行渲染，如果用户的数据是分页请求的，需要将autoScrollTop参数置为false，否则每请求一次数据，列表就会默认置顶
+3. 设置scrollViewProps参数的时候请注意：
   - 最好给个容器高度
   - 如果想触发onScrollToLower方法，可以尝试使用onBottom回调代替（因为组件内部已经使用了onScrollToLower方法，如果外部再定义，会导致代码冲突，组件上拉加载失效）
+
+## 感谢
+如果用着感觉还不错，欢迎赐予一枚star，以此来激励作者输出更多优质代码，造福一方😄
 
 ## 原理
 1. 处理数据：将传入的list分割成二维数组，初始化的时候只加载二维数组的第一项，随着页面滚动，会依次加入对应维度的数据（加快了初始化渲染速度）；
