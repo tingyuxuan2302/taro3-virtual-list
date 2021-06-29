@@ -50,8 +50,14 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         isComplete: false,
         twoList: [],
       }, () => {
-        this.formatList(nextProps.list, true)
+        if (nextProps.list?.length) {
+          this.formatList(nextProps.list, true)
+        } else {
+          this.handleComplete()
+        }
       })
+    } else if (!nextProps.list?.length) {
+      this.handleComplete()
     }
   }
   private pageHeightArr: number[] = [] // 用来装每一屏的高度
@@ -74,12 +80,8 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
    * @param	list 	列表
    * @param	isReRender 	当列表数据发生变化，将scrollView滑动至顶部
    */
-  formatList(list: [], isReRender = false): void {
+  formatList(list: any[] = [], isReRender = false): void {
     const { segmentNum } = this.props
-    if (!list || !list.length) {
-      // 初始化没有数据
-      return
-    }
     let arr: any[] = []
     const _list: any[] = []
     list.forEach((item, index) => {
@@ -97,11 +99,6 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         // 如果数据量少，不足一个segmentNum，则触发完成回调
         this.handleComplete()
       }
-    }
-    if (!_list.length) {
-      // 没数据
-      this.handleComplete()
-      return
     }
     this.initList = _list
     this.setState({
