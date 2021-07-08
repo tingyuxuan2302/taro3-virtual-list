@@ -64,7 +64,7 @@ export default function Demo(): JSX.Element {
 | onComplete | - | - | 否 | 列表是否已经把全部数据加载完成的回调 |
 | onRenderTop | - | - | 否 | 列表上部分内容渲染回调，用于渲染插入虚拟列表上边的内容 |
 | onRenderBottom | - | - | 否 | 列表下部分内容渲染回调，用于渲染插入虚拟列表下边的内容 |
-| onGetScrollData | (res) => {} | - | 否 | 获取滚动信息，以传入的listId作为key，默认key是“zt-virtial-list” |
+| onGetScrollData | (res) => {} | - | 否 | 获取滚动信息，以传入的listId作为key，默认key是“zt-virtial-list”，目的是让用户可以自定义组件的滚动高度，以此解决<https://github.com/NervJS/taro/issues/8466>的问题 |
 
 ## 注意事项
 1. 组件默认当外部传入的list**引用**发生变更的话，会重新渲染整个列表，如果不想重新渲染，则外部只需要修改list内部对象的属性值即可，不要更换list的**引用地址**
