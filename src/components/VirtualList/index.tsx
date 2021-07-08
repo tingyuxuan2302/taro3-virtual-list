@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, ScrollView, Block } from '@tarojs/components'
 import PropTypes, { InferProps } from 'prop-types'
 import { VirtualListProps, VirtualListState } from "../../../@types/VirtualList"
+import { throttle } from "../../common/utils"
 
 /**
  * 虚拟列表
@@ -17,6 +18,7 @@ import { VirtualListProps, VirtualListState } from "../../../@types/VirtualList"
  * @param	{Function}	onRender  二维列表Item的渲染回调
  * @param	{Function}	onRenderTop  二维列表上部分内容渲染回调
  * @param	{Function}	onRenderBottom  二维列表下部分内容渲染回调
+ * @param	{Function}	onGetScrollData  获取滚动信息
  */
 export default class VirtialList extends Component<VirtualListProps, VirtualListState> {
   public static propTypes: InferProps<VirtualListProps>
@@ -135,6 +137,12 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         Taro.nextTick(() => {
           this.setHeight()
         })
+        if (wholePageIndex === 1) {
+          // 第一次下拉渲染完成之后将置顶取消
+          this.setState({
+            isScrollTop: false,
+          })
+        }
       })
     })
   }
@@ -180,6 +188,13 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       }
     })
   }
+  handleScroll = throttle((event: any): void => {
+    const { listId } = this.props
+    this.props.onGetScrollData?.({
+      [`${listId}`]: event,
+    })
+    this.props.scrollViewProps?.onScroll?.(event)
+  }, 300, 300)
 
   render(): JSX.Element {
     const {
@@ -202,16 +217,21 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       height: '100%',
     }
 
+    const _scrollViewProps = {
+      ...scrollViewProps,
+      scrollTop: autoScrollTop ? (isScrollTop ? 0 : "") : scrollViewProps?.scrollTop,
+    }
+
     return (
       <ScrollView
         scrollY
         id={listId}
-        scrollTop={autoScrollTop && isScrollTop ? 0 : ''}
         style={scrollStyle}
         onScrollToLower={this.renderNext}
         lowerThreshold={250}
         className={`zt-virtual-list-container ${className}`}
-        {...scrollViewProps}
+        {..._scrollViewProps}
+        onScroll={this.handleScroll}
       >
         {onRenderTop?.()}
         <View className="zt-main-list">
@@ -268,4 +288,5 @@ VirtialList.propTypes = {
   onComplete: PropTypes.func,
   onRenderTop: PropTypes.func,
   onRenderBottom: PropTypes.func,
+  onGetScrollData: PropTypes.func,
 }

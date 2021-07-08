@@ -50,6 +50,11 @@ export interface VirtualListProps extends BaseComponent {
    * 列表下部分内容渲染回调，用于渲染插入虚拟列表下边的内容
    */
   onRenderBottom?(): any;
+  /**
+   * 获取滚动信息
+   */
+  // eslint-disable-next-line no-unused-vars
+  onGetScrollData?(event: any): void;
 }
 
 export interface VirtualListState {
