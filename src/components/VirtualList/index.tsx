@@ -29,8 +29,8 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
     this.state = {
       wholePageIndex: 0, // 每一屏为一个单位，屏幕索引
       twoList: [], // 二维数组
-      isScrollTop: false, // 是否需要滚动到顶部
       isComplete: false, // 数据是否全部加载完成
+      innerScrollTop: 0, // 记录组件内部的滚动高度
     } as VirtualListState
   }
 
@@ -44,16 +44,20 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   }
   UNSAFE_componentWillReceiveProps(nextProps: VirtualListProps): void {
     const { list } = this.props
+    // 提前把innerScrollTop置为不是0，防止列表置顶失效
+    this.setState({
+      innerScrollTop: 1,
+    })
     if (JSON.stringify(nextProps.list) !== JSON.stringify(list)) {
       this.pageHeightArr = []
       this.setState({
         wholePageIndex: 0,
-        isScrollTop: false,
         isComplete: false,
         twoList: [],
+        innerScrollTop: 0,
       }, () => {
         if (nextProps.list?.length) {
-          this.formatList(nextProps.list, true)
+          this.formatList(nextProps.list)
         } else {
           this.handleComplete()
         }
@@ -80,9 +84,8 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   /**
    * 将列表格式化为二维
    * @param	list 	列表
-   * @param	isReRender 	当列表数据发生变化，将scrollView滑动至顶部
    */
-  formatList(list: any[] = [], isReRender = false): void {
+  formatList(list: any[] = []): void {
     const { segmentNum } = this.props
     let arr: any[] = []
     const _list: any[] = []
@@ -106,11 +109,6 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
     this.setState({
       twoList: _list.slice(0, 1),
     }, () => {
-      if (isReRender) {
-        this.setState({
-          isScrollTop: true,
-        })
-      }
       Taro.nextTick(() => {
         this.setHeight()
       })
@@ -137,12 +135,6 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         Taro.nextTick(() => {
           this.setHeight()
         })
-        if (wholePageIndex === 1) {
-          // 第一次下拉渲染完成之后将置顶取消
-          this.setState({
-            isScrollTop: false,
-          })
-        }
       })
     })
   }
@@ -199,8 +191,8 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   render(): JSX.Element {
     const {
       twoList,
-      isScrollTop,
       isComplete,
+      innerScrollTop,
     } = this.state
     const {
       segmentNum,
@@ -219,7 +211,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
 
     const _scrollViewProps = {
       ...scrollViewProps,
-      scrollTop: autoScrollTop ? (isScrollTop ? 0 : "") : scrollViewProps?.scrollTop,
+      scrollTop: autoScrollTop ? (innerScrollTop === 0 ? 0 : "") : scrollViewProps?.scrollTop,
     }
 
     return (

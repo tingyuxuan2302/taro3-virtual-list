@@ -71,13 +71,13 @@ export interface VirtualListState {
    */
   twoList: Array;
   /**
-   * 是否需要滚动到顶部
-   */
-  isScrollTop: boolean;
-  /**
    * 数据是否全部加载完成
    */
   isComplete: boolean;
+  /**
+   * 记录组件内部的滚动高度
+   */
+  innerScrollTop: number;
 }
 
 declare const VirtualList: ComponentClass<VirtualListProps>

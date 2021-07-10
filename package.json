@@ -1,6 +1,6 @@
 {
   "name": "taro-virtual-list",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "taro虚拟列表",
   "main": "dist/index.js",
   "browser": "dist/index.umd.js",
