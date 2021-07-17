@@ -1,6 +1,7 @@
 import { ComponentClass } from 'react'
 import { BaseComponent } from './baseType'
 
+type ListType = "single" | "multi"
 export interface VirtualListProps extends BaseComponent {
   /**
    * 列表数据
@@ -11,9 +12,19 @@ export interface VirtualListProps extends BaseComponent {
    */
   listId?: string;
   /**
+   * 传入组件内的list类型
+   * @param	single 一次性传入列表所有数据
+   * @param	multi 从服务端分页请求，合并之后传入组件
+   */
+  listType: ListType;
+  /**
    * 自定义分段的数量，默认10
    */
   segmentNum: number;
+  /**
+   * 当前页码，当list是通过服务端分页获取的时候必传
+   */
+  pageNum?: number;
   /**
    * 组件内部是否需要根据list数据变化自动滚动至列表顶部
    */

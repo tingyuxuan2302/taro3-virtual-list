@@ -7,14 +7,27 @@ import './index.scss'
 
 export default function Demo(): JSX.Element {
   const [list, setList] = useState<number[]>([])
+  const [pageNum, setPageNum] = useState(1)
 
   useEffect(() => {
     const arr: number[] = []
-    Array(34).fill(0).forEach((item, index) => {
+    Array(7).fill(0).forEach((item, index) => {
       arr.push(index)
     })
     setList(arr)
   }, [])
+  // onReachBottom() {
+  //   console.log('触底了----')
+  //   // this.renderNext()
+  //   this.setState({
+  //     isBottom: true,
+  //   })
+  // }
+  // getIsBottomStatus = (status) => {
+  //   this.setState({
+  //     isBottom: status,
+  //   })
+  // }
   const renderFunc = (item, index, pageIndex) => {
     return (
       <View className="el">{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
@@ -25,27 +38,32 @@ export default function Demo(): JSX.Element {
   }
   const handleComplete = () => {
     console.log('加载完成')
-    Taro.showToast({
-      title: "到底啦～",
-    })
   }
-  const renderBottom = () => {
-    return (
-      <View>我是底部内容！！！！</View>
-    )
+  const handleScrollToLower = () => {
+    const arr: number[] = []
+    Array(7).fill(0).forEach((item, index) => {
+      arr.push(list.length + index)
+    })
+    let _list = [...list]
+    _list = _list.concat(arr)
+    setList(_list)
+    setPageNum(pageNum + 1)
   }
   return (
     <View>
       <VirtualList
         list={list}
+        pageNum={pageNum}
+        segmentNum={7}
         onRender={renderFunc}
         onBottom={handleBottom}
         onComplete={handleComplete}
-        onRenderBottom={renderBottom}
+        listType="multi"
         scrollViewProps={{
           style: {
             "height": '100vh',
           },
+          onScrollToLower: handleScrollToLower,
         }}
       />
     </View>

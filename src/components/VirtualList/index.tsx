@@ -35,34 +35,47 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   }
 
   componentDidMount(): void {
-    const { list } = this.props
-    this.formatList(list)
+    const { list, listType } = this.props
     Taro.getSystemInfo()
       .then(res => {
         this.windowHeight = res?.windowHeight
       })
+    if (listType === "single") {
+      this.formatList(list)
+    } else if (listType === "multi") {
+      this.formatMultiList(list)
+    }
   }
   UNSAFE_componentWillReceiveProps(nextProps: VirtualListProps): void {
-    const { list } = this.props
-    // 提前把innerScrollTop置为不是0，防止列表置顶失效
-    this.setState({
-      innerScrollTop: 1,
-    })
-    if (JSON.stringify(nextProps.list) !== JSON.stringify(list)) {
-      this.pageHeightArr = []
+    const { list, listType } = this.props
+    if (listType === "single") {
+      // 提前把innerScrollTop置为不是0，防止列表置顶失效
       this.setState({
-        wholePageIndex: 0,
-        isComplete: false,
-        twoList: [],
-        innerScrollTop: 0,
-      }, () => {
-        if (nextProps.list?.length) {
-          this.formatList(nextProps.list)
-        } else {
-          this.handleComplete()
-        }
+        innerScrollTop: 1,
       })
-    } else if (!nextProps.list?.length) {
+
+      if (JSON.stringify(nextProps.list) !== JSON.stringify(list)) {
+        this.pageHeightArr = []
+        this.setState({
+          wholePageIndex: 0,
+          isComplete: false,
+          twoList: [],
+          innerScrollTop: 0,
+        }, () => {
+          if (nextProps.list?.length) {
+            this.formatList(nextProps.list)
+          } else {
+            this.handleComplete()
+          }
+        })
+      }
+    } else if (listType === "multi") {
+      if (JSON.stringify(nextProps.list) !== JSON.stringify(list)) {
+        this.formatMultiList(nextProps.list, nextProps.pageNum)
+      }
+    }
+    if (!nextProps.list?.length) {
+      // list为空
       this.handleComplete()
     }
   }
@@ -82,10 +95,28 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
     })
   }
   /**
-   * 将列表格式化为二维
-   * @param	list 	列表
+   * 当list是通过服务端分页获取的时候，对list进行处理
+   * @param	list 外部list
+   * @param	pageNum 当前页码
    */
-  formatList(list: any[] = []): void {
+  formatMultiList(list: any[] = [], pageNum = 1): void {
+    const { twoList} = this.state
+    if (!list?.length) return
+    this.segmentList(list)
+    twoList[pageNum - 1] = this.initList[pageNum - 1]
+    this.setState({
+      twoList: [...twoList],
+      wholePageIndex: pageNum - 1,
+    }, () => {
+      Taro.nextTick(() => {
+        this.setHeight()
+      })
+    })
+  }
+  /**
+   * 按规则分割list，存在私有变量initList，备用
+   */
+  segmentList(list: any[] = []): void {
     const { segmentNum } = this.props
     let arr: any[] = []
     const _list: any[] = []
@@ -106,8 +137,15 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       }
     }
     this.initList = _list
+  }
+  /**
+   * 将列表格式化为二维
+   * @param	list 	列表
+   */
+  formatList(list: any[] = []): void {
+    this.segmentList(list)
     this.setState({
-      twoList: _list.slice(0, 1),
+      twoList: this.initList.slice(0, 1),
     }, () => {
       Taro.nextTick(() => {
         this.setHeight()
@@ -115,28 +153,32 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
     })
   }
   renderNext = (): void => {
-    const { onBottom } = this.props
-    const page_index = this.state.wholePageIndex + 1
-    if (!this.initList[page_index]?.length) {
-      this.handleComplete()
+    const { onBottom, listType, scrollViewProps } = this.props
+    if (listType === "single") {
+      const page_index = this.state.wholePageIndex + 1
+      if (!this.initList[page_index]?.length) {
+        this.handleComplete()
 
-      return
-    }
-    onBottom?.()
+        return
+      }
+      onBottom?.()
 
-    this.setState({
-      wholePageIndex: page_index,
-    }, () => {
-      const { wholePageIndex, twoList } = this.state
-      twoList[wholePageIndex] = this.initList[wholePageIndex]
       this.setState({
-        twoList: [...twoList],
+        wholePageIndex: page_index,
       }, () => {
-        Taro.nextTick(() => {
-          this.setHeight()
+        const { wholePageIndex, twoList } = this.state
+        twoList[wholePageIndex] = this.initList[wholePageIndex]
+        this.setState({
+          twoList: [...twoList],
+        }, () => {
+          Taro.nextTick(() => {
+            this.setHeight()
+          })
         })
       })
-    })
+    } else if (listType === "multi") {
+      scrollViewProps?.onScrollToLower?.()
+    }
   }
   /**
    * 设置每一个维度的数据渲染完成之后所占的高度
@@ -257,7 +299,9 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
 
 VirtialList.defaultProps = {
   list: [],
+  pageNum: 1,
   listId: "zt-virtial-list",
+  listType: 'single',
   segmentNum: 10,
   screenNum: 2,
   scrollViewProps: {},
@@ -271,6 +315,7 @@ VirtialList.defaultProps = {
 VirtialList.propTypes = {
   list: PropTypes.array.isRequired,
   listId: PropTypes.string,
+  listType: PropTypes.string,
   segmentNum: PropTypes.number,
   screenNum: PropTypes.number,
   autoScrollTop: PropTypes.bool,
