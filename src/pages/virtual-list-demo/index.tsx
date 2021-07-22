@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import VirtualList from '../../components/VirtualList'
 

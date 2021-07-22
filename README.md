@@ -51,7 +51,9 @@ export default function Demo(): JSX.Element {
 | --- | :----: | ---- | ---- | ------ |
 | list | Array | - | 是 | 列表数据 |
 | listId | String | "zt-virtial-list" | 否 | 虚拟列表唯一id（防止同一个页面有多个虚拟列表导致渲染错乱）|
-| segmentNum | Number | 10 | 否 | 自定义二维数组每一维度的数量，默认10 |
+| listType | String | "single" | 否 | 传入组件内的list类型<br>single：一次性传入列表所有数据<br>multi：从服务端分页请求，合并之后传入组件 |
+| pageNum | Number | 1 | 否 | 当前页码，当list是通过服务端分页获取的时候必传，最小值是1 |
+| segmentNum | Number | 10 | 否 | 自定义二维数组每一维度的数量，默认10，当list是通过服务端分页获取的时候，推荐传每页的数据量，且必传 |
 | autoScrollTop | Boolean | true | 否 | 组件内部是否需要根据list数据变化自动滚动至列表顶部 |
 | screenNum | Number | 2 | 否 | 指定监听页面显示区域基准值，例如2，则组件会监听 2 * scrollHeight高度的上下区域范围(该值会影响页面真实节点的渲染数量，值越大，白屏几率越小，但是页面性能也就越差) |
 | scrollViewProps | Object | - | 否 | 自定义scrollView的参数，会合并到组件内部的scrollView的参数里 |
@@ -69,9 +71,10 @@ export default function Demo(): JSX.Element {
 ## 注意事项
 1. 组件默认当外部传入的list**引用**发生变更的话，会重新渲染整个列表，如果不想重新渲染，则外部只需要修改list内部对象的属性值即可，不要更换list的**引用地址**
 2. 如果想禁止组件内部自动滚动至顶部的功能，将autoScrollTop置为false，此时需要用户手动控制列表滚动高度，可通过onGetScrollData回调获取当前列表滚动数据，注意该数据结构有所不同噢
-3. onRenderBottom渲染的内容会在虚拟列表所有数据渲染完成之后才会调用
-4. 该组件默认支持拿到全部数据进行渲染，如果用户的数据是分页请求的，需要将autoScrollTop参数置为false，否则每请求一次数据，列表就会默认置顶
-5. 设置scrollViewProps参数的时候请注意：
+3. 当遇到**服务端分页请求**获得list的情况，**listType**，**pageNum**，**segmentNum**必传，**autoScrollTop**置为false，在**scrollViewProps**中传入**onScrollToLower**函数
+4. onRenderBottom渲染的内容会在虚拟列表所有数据渲染完成之后才会调用
+5. 该组件默认支持拿到全部数据进行渲染，如果用户的数据是分页请求的，需要将autoScrollTop参数置为false，否则每请求一次数据，列表就会默认置顶
+6. 设置scrollViewProps参数的时候请注意：
   - 最好给个容器高度
   - 如果想触发onScrollToLower方法，可以尝试使用onBottom回调代替（因为组件内部已经使用了onScrollToLower方法，如果外部再定义，会导致代码冲突，组件上拉加载失效）
 
@@ -79,6 +82,8 @@ export default function Demo(): JSX.Element {
 如果用着感觉还不错，欢迎赐予一枚star，以此来激励作者输出更多优质代码，造福一方😄
 
 ## 版本
+#### 1.0.6
+  - 支持服务端分页获取数据渲染
 #### 1.0.4
   - 添加**onGetScrollData**回调获取列表滚动数据
 #### 1.0.3
