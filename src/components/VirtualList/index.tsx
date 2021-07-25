@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro'
 import { View, ScrollView, Block } from '@tarojs/components'
 import PropTypes, { InferProps } from 'prop-types'
 import { VirtualListProps, VirtualListState } from "../../../@types/VirtualList"
-import { throttle } from "../../common/utils"
+import { throttle, taroEnv } from "../../common/utils"
 
 /**
  * 虚拟列表
@@ -36,10 +36,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
 
   componentDidMount(): void {
     const { list, listType } = this.props
-    Taro.getSystemInfo()
-      .then(res => {
-        this.windowHeight = res?.windowHeight
-      })
+    this.getSystemInformation()
     if (listType === "single") {
       this.formatList(list)
     } else if (listType === "multi") {
@@ -83,6 +80,20 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   private initList: any[] = [] // 承载初始化的二维数组
   private windowHeight = 0 // 当前屏幕的高度
   private currentPage: any = Taro.getCurrentInstance()
+
+  /**
+   * 获取客户端信息
+   */
+  getSystemInformation = (): void => {
+    if (taroEnv.isH5) {
+      this.windowHeight = document.documentElement.clientHeight
+      return
+    }
+    Taro.getSystemInfo()
+      .then(res => {
+        this.windowHeight = res?.windowHeight
+      })
+  }
   /**
    * 列表数据渲染完成
    */

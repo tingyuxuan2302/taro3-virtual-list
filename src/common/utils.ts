@@ -1,3 +1,12 @@
+import Taro from '@tarojs/taro'
+
+/**
+* Taro环境常量
+*/
+export const taroEnv = {
+  isH5: Taro.getEnv() === Taro.ENV_TYPE.WEB,
+}
+
 /**
 * 截流函数
 *

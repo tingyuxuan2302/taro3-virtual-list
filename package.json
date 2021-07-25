@@ -15,9 +15,11 @@
   "scripts": {
     "dev": "npm run dev:lib",
     "dev:weapp": "npm run build:weapp -- --watch",
+    "dev:h5": "npm run build:h5 -- --watch",
     "dev:lib": "tsc --project ./tsconfig.build.json --watch --incremental",
     "build": "npm run build:rollup && npm run build:lib",
     "build:weapp": "taro build --type weapp",
+    "build:h5": "taro build --type h5",
     "build:lib": "tsc --project ./tsconfig.build.json --declaration",
     "build:rollup": "rollup --config ./rollup.config.js",
     "lint": "eslint --ext .js,.tsx,.ts,.jsx src",

@@ -35,7 +35,7 @@ export default {
     {
       file: resolveFile(Package.browser),
       format: 'umd',
-      name: 'taro-ui',
+      name: 'taro3-virtual-list',
       sourcemap: true,
       globals: {
         react: 'React',
