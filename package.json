@@ -30,7 +30,8 @@
     "prepack": "npm run build",
     "clean": "rimraf .temp dist lib coverage",
     "publish": "npm run build && npm publish",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
