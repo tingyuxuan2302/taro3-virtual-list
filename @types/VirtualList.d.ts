@@ -70,10 +70,6 @@ export interface VirtualListProps extends BaseComponent {
 
 export interface VirtualListState {
   /**
-   * 除了微信，其他平台的checkbox state
-   */
-  list: ZtCheckboxList;
-  /**
    * 每一个维度为一个单位，维度索引
    */
   wholePageIndex: number;

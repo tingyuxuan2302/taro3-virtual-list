@@ -3,6 +3,7 @@
   "version": "1.0.6",
   "description": "taro虚拟列表",
   "main": "dist/index.js",
+  "main:h5": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
   "module": "dist/index.esm.js",
   "types": "@types/index.d.ts",
@@ -15,9 +16,11 @@
   "scripts": {
     "dev": "npm run dev:lib",
     "dev:weapp": "npm run build:weapp -- --watch",
+    "dev:h5": "npm run build:h5 -- --watch",
     "dev:lib": "tsc --project ./tsconfig.build.json --watch --incremental",
     "build": "npm run build:rollup && npm run build:lib",
     "build:weapp": "taro build --type weapp",
+    "build:h5": "taro build --type h5",
     "build:lib": "tsc --project ./tsconfig.build.json --declaration",
     "build:rollup": "rollup --config ./rollup.config.js",
     "lint": "eslint --ext .js,.tsx,.ts,.jsx src",
@@ -53,7 +56,9 @@
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "babel-preset-taro": "3.2.1",
+    "commitizen": "^4.2.4",
     "cross-env": "^5.2.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.18.0",
     "eslint-config-taro": "3.2.1",
     "eslint-plugin-import": "^2.12.0",
@@ -87,5 +92,10 @@
   "directories": {
     "lib": "lib"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { View } from '@tarojs/components'
-import VirtualList from '../../components/VirtualList'
+import ZtVirtualList from '../../components/VirtualList'
 
 import './index.scss'
 
 export default function Demo(): JSX.Element {
   const [list, setList] = useState<number[]>([])
-  const [pageNum, setPageNum] = useState(1)
+  // const [pageNum, setPageNum] = useState(1)
 
   useEffect(() => {
     const arr: number[] = []
-    Array(7).fill(0).forEach((item, index) => {
+    Array(88).fill(0).forEach((item, index) => {
       arr.push(index)
     })
     setList(arr)
@@ -29,7 +29,7 @@ export default function Demo(): JSX.Element {
   // }
   const renderFunc = (item, index, pageIndex) => {
     return (
-      <View className="el">{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
+      <View className="el" key={item}>{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
     )
   }
   const handleBottom = () => {
@@ -38,31 +38,32 @@ export default function Demo(): JSX.Element {
   const handleComplete = () => {
     console.log('加载完成')
   }
-  const handleScrollToLower = () => {
-    const arr: number[] = []
-    Array(7).fill(0).forEach((item, index) => {
-      arr.push(list.length + index)
-    })
-    let _list = [...list]
-    _list = _list.concat(arr)
-    setList(_list)
-    setPageNum(pageNum + 1)
-  }
+  // const handleScrollToLower = () => {
+  //   const arr: number[] = []
+  //   Array(7).fill(0).forEach((item, index) => {
+  //     arr.push(list.length + index)
+  //   })
+  //   let _list = [...list]
+  //   _list = _list.concat(arr)
+  //   setList(_list)
+  //   setPageNum(pageNum + 1)
+  // }
   return (
     <View>
-      <VirtualList
+      <ZtVirtualList
         list={list}
-        pageNum={pageNum}
-        segmentNum={7}
+        // pageNum={pageNum}
+        segmentNum={10}
         onRender={renderFunc}
         onBottom={handleBottom}
         onComplete={handleComplete}
-        listType="multi"
+        // listType="multi"
         scrollViewProps={{
           style: {
             "height": '100vh',
           },
-          onScrollToLower: handleScrollToLower,
+          lowerThreshold: 2000,
+          // onScrollToLower: handleScrollToLower,
         }}
       />
     </View>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import Taro from '@tarojs/taro'
+import Taro, { createSelectorQuery, getSystemInfoSync } from '@tarojs/taro'
 import { View, ScrollView, Block } from '@tarojs/components'
 import PropTypes, { InferProps } from 'prop-types'
-import { VirtualListProps, VirtualListState } from "../../../@types/VirtualList"
-import { throttle } from "../../common/utils"
+import { VirtualListProps, VirtualListState } from "../../../@types/virtualList"
+import { throttle, isH5 } from '../../common/utils'
 
 /**
  * 虚拟列表
@@ -36,10 +36,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
 
   componentDidMount(): void {
     const { list, listType } = this.props
-    Taro.getSystemInfo()
-      .then(res => {
-        this.windowHeight = res?.windowHeight
-      })
+    this.getSystemInformation()
     if (listType === "single") {
       this.formatList(list)
     } else if (listType === "multi") {
@@ -83,6 +80,16 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   private initList: any[] = [] // 承载初始化的二维数组
   private windowHeight = 0 // 当前屏幕的高度
   private currentPage: any = Taro.getCurrentInstance()
+  private observer: IntersectionObserver
+
+  getSystemInformation = ():void => {
+    try {
+      const res = getSystemInfoSync()
+      this.windowHeight = res.windowHeight
+    } catch (err) {
+      console.error(`获取系统信息失败：${err}`)
+    }
+  }
   /**
    * 列表数据渲染完成
    */
@@ -148,12 +155,12 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       twoList: this.initList.slice(0, 1),
     }, () => {
       Taro.nextTick(() => {
-        this.setHeight()
+        this.setHeight(list)
       })
     })
   }
   renderNext = (): void => {
-    const { onBottom, listType, scrollViewProps } = this.props
+    const { onBottom, listType, scrollViewProps, list } = this.props
     if (listType === "single") {
       const page_index = this.state.wholePageIndex + 1
       if (!this.initList[page_index]?.length) {
@@ -172,7 +179,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
           twoList: [...twoList],
         }, () => {
           Taro.nextTick(() => {
-            this.setHeight()
+            this.setHeight(list)
           })
         })
       })
@@ -183,20 +190,65 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   /**
    * 设置每一个维度的数据渲染完成之后所占的高度
    */
-  setHeight():void {
+  setHeight(list: any[] = []):void {
     const { wholePageIndex } = this.state
     const { listId } = this.props
-    const query = Taro.createSelectorQuery()
+    const query = createSelectorQuery()
     query.select(`#${listId} .wrap_${wholePageIndex}`).boundingClientRect()
     query.exec((res) => {
-      this.pageHeightArr.push(res?.[0]?.height)
+      // 有数据的时候才去收集高度，不然页面初始化渲染（在H5中无数据）收集到的高度是错误的
+      if (list?.length) {
+        this.pageHeightArr.push(res?.[0]?.height)
+      }
     })
-    this.observe()
+    this.handleObserve()
+  }
+  webObserve = (): void => {
+    const { listId } = this.props
+    const $targets = document.querySelectorAll(`#${listId} .zt-main-list>taro-view-core`)
+    const options = {
+      root: document.querySelector(`#${listId}`),
+      rootMargin: "500px 0px",
+      // threshold: [0.5],
+    }
+    this.observer = new IntersectionObserver(this.observerCallBack, options)
+    $targets.forEach($item => {
+      this.observer?.observe($item)
+    })
+  }
+  observerCallBack = (entries: IntersectionObserverEntry[]): void => {
+    const { twoList } = this.state
+    entries.forEach((item ) => {
+      const screenIndex = item.target['data-index']
+      if (item.isIntersecting) {
+        // 如果有相交区域，则将对应的维度进行赋值
+        twoList[screenIndex] = this.initList[screenIndex]
+        this.setState({
+          twoList: [...twoList],
+        })
+      } else {
+        // 当没有与当前视口有相交区域，则将改屏的数据置为该屏的高度占位
+        twoList[screenIndex] = { height: this.pageHeightArr[screenIndex] }
+        this.setState({
+          twoList: [...twoList],
+        })
+      }
+    })
   }
   /**
    * 监听可视区域
    */
-  observe = (): void => {
+  handleObserve = (): void => {
+    if (isH5) {
+      this.webObserve()
+    } else {
+      this.miniObserve()
+    }
+  }
+  /**
+   * 小程序平台监听
+   */
+  miniObserve = (): void => {
     const { wholePageIndex } = this.state
     const { scrollViewProps, listId, screenNum } = this.props
     // 以传入的scrollView的高度为相交区域的参考边界，若没传，则默认使用屏幕高度
@@ -222,6 +274,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       }
     })
   }
+
   handleScroll = throttle((event: any): void => {
     const { listId } = this.props
     this.props.onGetScrollData?.({
@@ -272,7 +325,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
           {
             twoList?.map((item, pageIndex) => {
               return (
-                <View key={pageIndex} className={`wrap_${pageIndex}`}>
+                <View key={pageIndex} data-index={pageIndex} className={`wrap_${pageIndex}`}>
                   {
                     item?.length > 0 ? (
                       <Block>
