@@ -29,7 +29,8 @@
     "prepublishOnly": "npm install",
     "prepack": "npm run build",
     "clean": "rimraf .temp dist lib coverage",
-    "publish": "npm run build && npm publish"
+    "publish": "npm run build && npm publish",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -79,6 +80,7 @@
     "rollup-plugin-scss": "^2.6.1",
     "rollup-plugin-typescript2": "^0.27.1",
     "rollup-plugin-visualizer": "^4.0.4",
+    "standard-version": "^9.3.1",
     "stylelint": "13.6.0",
     "stylelint-config-standard": "20.0.0",
     "stylelint-scss": "3.17.2",
