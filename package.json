@@ -1,6 +1,6 @@
 {
   "name": "taro-virtual-list",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "taro虚拟列表",
   "main": "dist/index.js",
   "main:h5": "dist/index.esm.js",
