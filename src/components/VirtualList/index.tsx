@@ -116,7 +116,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       wholePageIndex: pageNum - 1,
     }, () => {
       Taro.nextTick(() => {
-        this.setHeight()
+        this.setHeight(list)
       })
     })
   }
