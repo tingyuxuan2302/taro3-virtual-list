@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.9](https://github.com/tingyuxuan2302/taro3-virtual-list/compare/v1.0.8...v1.0.9) (2021-08-26)
+
+
+### Bug Fixes
+
+* **throttle:** fix throttle ([9c1ebcc](https://github.com/tingyuxuan2302/taro3-virtual-list/commit/9c1ebcc179f5be1f0a5209dd67ecbfe51c7bb81d))
+
 ### [1.0.8](https://github.com/tingyuxuan2302/taro3-virtual-list/compare/v1.0.7...v1.0.8) (2021-08-04)
 
 
