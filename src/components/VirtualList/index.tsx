@@ -325,7 +325,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
           {
             twoList?.map((item, pageIndex) => {
               return (
-                <View key={pageIndex} data-index={pageIndex} className={`wrap_${pageIndex}`}>
+                <View key={pageIndex} data-index={pageIndex} className={`zt-wrap-item wrap_${pageIndex}`}>
                   {
                     item?.length > 0 ? (
                       <Block>
