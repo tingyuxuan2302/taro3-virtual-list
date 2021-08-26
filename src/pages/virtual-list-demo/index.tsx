@@ -38,6 +38,9 @@ export default function Demo(): JSX.Element {
   const handleComplete = () => {
     console.log('加载完成')
   }
+  // const handleGetScrollData = (e) => {
+  //   console.log('scroll-data', e)
+  // }
   // const handleScrollToLower = () => {
   //   const arr: number[] = []
   //   Array(7).fill(0).forEach((item, index) => {
@@ -57,6 +60,7 @@ export default function Demo(): JSX.Element {
         onRender={renderFunc}
         onBottom={handleBottom}
         onComplete={handleComplete}
+        // onGetScrollData={handleGetScrollData}
         // listType="multi"
         scrollViewProps={{
           style: {

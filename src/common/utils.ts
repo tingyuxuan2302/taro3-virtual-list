@@ -27,7 +27,7 @@ export const throttle = (fn: (params: any) => void, delay: number, mustRunDelay:
       fn.apply(this, args)
       startTime = curTime
     } else {
-      timer = setTimeout(function() {
+      timer = setTimeout(() => {
         fn.apply(this, args)
       }, delay)
     }

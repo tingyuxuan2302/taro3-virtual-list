@@ -13,6 +13,14 @@
     "dist",
     "@types"
   ],
+  "keywords": [
+    "taro",
+    "taro-virtual-list",
+    "taro3-virtual-list",
+    "virtual-list",
+    "虚拟列表",
+    "ui"
+  ],
   "scripts": {
     "dev": "npm run dev:lib",
     "dev:weapp": "npm run build:weapp -- --watch",
