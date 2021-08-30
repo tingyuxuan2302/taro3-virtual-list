@@ -5,7 +5,7 @@ npm i -D taro-virtual-list
 ```
 
 ## 使用方法
-#### 场景：一次性请求到所有数据（即listType="single"）
+### 试用场景一：一次性请求到所有数据（即listType="single"）
 ```
 import { TaroVirtualList } from 'taro-virtual-list'
 
@@ -40,7 +40,7 @@ export default function Demo(): JSX.Element {
 
 }
 ```
-#### 场景：数据是分页请求（即listType="multi"）
+### 试用场景二：数据是分页请求（即listType="multi"）
 ```
 import { TaroVirtualList } from 'taro-virtual-list'
 
@@ -76,11 +76,6 @@ export default function Demo(): JSX.Element {
 
 }
 ```
-
-
-## 为啥要开发该组件
-1. 列表页数据量过多，一次性渲染完成后页面节点数量过大，造成页面渲染卡顿，渲染完成之后操作页面数据也会异常卡顿；
-2. 官方虚拟列表（3.2.1）存在一定的渲染bug，特别是针对**列表节点不等高**，存在诸多问题，比如节点闪动、滚动过快造成无限加载、白屏率较高等；
 
 ## 参数说明
 
@@ -118,6 +113,11 @@ export default function Demo(): JSX.Element {
 
 ## 感谢
 如果用着感觉还不错，欢迎赐予一枚star，以此来激励作者输出更多优质代码，造福一方😄
+
+
+## 为啥要开发该组件
+1. 列表页数据量过多，一次性渲染完成后页面节点数量过大，造成页面渲染卡顿，渲染完成之后操作页面数据也会异常卡顿；
+2. 官方虚拟列表（3.2.1）存在一定的渲染bug，特别是针对**列表节点不等高**，存在诸多问题，比如节点闪动、滚动过快造成无限加载、白屏率较高等；
 
 ## 该组件适用场景
 1. 页面节点渲染较多（主要是列表页）；
