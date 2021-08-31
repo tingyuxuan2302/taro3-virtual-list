@@ -6,11 +6,11 @@ import './index.scss'
 
 export default function Demo(): JSX.Element {
   const [list, setList] = useState<number[]>([])
-  // const [pageNum, setPageNum] = useState(1)
+  const [pageNum, setPageNum] = useState(1)
 
   useEffect(() => {
     const arr: number[] = []
-    Array(88).fill(0).forEach((item, index) => {
+    Array(10).fill(0).forEach((item, index) => {
       arr.push(index)
     })
     setList(arr)
@@ -32,42 +32,48 @@ export default function Demo(): JSX.Element {
       <View className="el" key={item}>{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
     )
   }
-  const handleBottom = () => {
-    console.log('触底了')
-  }
+  // const handleBottom = () => {
+  //   console.log('触底了')
+  // }
   const handleComplete = () => {
     console.log('加载完成')
   }
   // const handleGetScrollData = (e) => {
   //   console.log('scroll-data', e)
   // }
-  // const handleScrollToLower = () => {
-  //   const arr: number[] = []
-  //   Array(7).fill(0).forEach((item, index) => {
-  //     arr.push(list.length + index)
-  //   })
-  //   let _list = [...list]
-  //   _list = _list.concat(arr)
-  //   setList(_list)
-  //   setPageNum(pageNum + 1)
-  // }
+  const handleScrollToLower = () => {
+    const arr: number[] = []
+    Array(10).fill(0).forEach((item, index) => {
+      arr.push(list.length + index)
+    })
+    let _list = [...list]
+    _list = _list.concat(arr)
+    setTimeout(() => {
+      setList(_list)
+    }, 1000)
+    setPageNum(pageNum + 1)
+  }
+  const handleRenderLoad = () => {
+    return '数据载入中...'
+  }
   return (
     <View>
       <ZtVirtualList
         list={list}
-        // pageNum={pageNum}
+        pageNum={pageNum}
         segmentNum={10}
         onRender={renderFunc}
-        onBottom={handleBottom}
+        // onBottom={handleBottom}
         onComplete={handleComplete}
         // onGetScrollData={handleGetScrollData}
-        // listType="multi"
+        listType="multi"
+        onRenderLoad={handleRenderLoad}
         scrollViewProps={{
           style: {
             "height": '100vh',
           },
-          lowerThreshold: 2000,
-          // onScrollToLower: handleScrollToLower,
+          lowerThreshold: 10,
+          onScrollToLower: handleScrollToLower,
         }}
       />
     </View>

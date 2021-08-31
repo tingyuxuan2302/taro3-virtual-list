@@ -5,21 +5,6 @@ import PropTypes, { InferProps } from 'prop-types'
 import { VirtualListProps, VirtualListState } from "../../../@types/virtualList"
 import { throttle, isH5 } from '../../common/utils'
 
-/**
- * 虚拟列表
- * @param	{Array}	list  列表数据
- * @param	{String}	listId  虚拟列表唯一id（防止同一个页面有多个虚拟列表导致渲染错乱）
- * @param	{Number}	segmentNum  自定义分段的数量，默认10
- * @param	{Boolean}	autoScrollTop  组件内部是否需要根据list数据变化自动滚动至列表顶部
- * @param	{Number}	screenNum  指定页面显示区域基准值，例如2，则组件会监听 2 * scrollHeight高度的上下区域(该值会影响页面真实节点的渲染数量)
- * @param	{Object}	scrollViewProps  scrollView的参数
- * @param	{Function}	onBottom  二维列表是否已经触底回调
- * @param	{Function}	onComplete  二维列表是否已经把全部数据加载完成的回调
- * @param	{Function}	onRender  二维列表Item的渲染回调
- * @param	{Function}	onRenderTop  二维列表上部分内容渲染回调
- * @param	{Function}	onRenderBottom  二维列表下部分内容渲染回调
- * @param	{Function}	onGetScrollData  获取滚动信息
- */
 export default class VirtialList extends Component<VirtualListProps, VirtualListState> {
   public static propTypes: InferProps<VirtualListProps>
   public static defaultProps: VirtualListProps
@@ -295,6 +280,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
       onRenderTop,
       onRenderBottom,
       onRender,
+      onRenderLoad,
       listId,
       className,
       autoScrollTop,
@@ -344,6 +330,13 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
             })
           }
         </View>
+        {
+          onRenderLoad?.() && (
+            <View className="zt-loading-text">
+              {onRenderLoad()}
+            </View>
+          )
+        }
         {isComplete && onRenderBottom?.()}
       </ScrollView>
     )

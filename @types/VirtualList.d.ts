@@ -66,6 +66,10 @@ export interface VirtualListProps extends BaseComponent {
    */
   // eslint-disable-next-line no-unused-vars
   onGetScrollData?(event: any): void;
+  /**
+   * 渲染loading内容
+   */
+  onRenderLoad?(): any;
 }
 
 export interface VirtualListState {
