@@ -1,6 +1,11 @@
 # 基于Taro3的虚拟列表
+## 安装
+```
+npm i -D taro-virtual-list
+```
 
 ## 使用方法
+### 试用场景一：一次性请求到所有数据（即listType="single"）
 ```
 import { TaroVirtualList } from 'taro-virtual-list'
 
@@ -35,14 +40,42 @@ export default function Demo(): JSX.Element {
 
 }
 ```
+### 试用场景二：数据是分页请求（即listType="multi"）
+```
+import { TaroVirtualList } from 'taro-virtual-list'
 
-## 为啥要开发该组件
-1. 列表页数据量过多，一次性渲染完成后页面节点数量过大，造成页面渲染卡顿，渲染完成之后操作页面数据也会异常卡顿；
-2. 官方虚拟列表（3.2.1）存在一定的渲染bug，特别是针对**列表节点不等高**，存在诸多问题，比如节点闪动、滚动过快造成无限加载、白屏率较高等；
+export default function Demo(): JSX.Element {
+  // 渲染列表Item
+  const renderFunc = (item, index, pageIndex) => {
+    return (
+      <View className="el">{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
+    )
+  }
+  const onPageScrollToLower = () => {
+    // 执行分页数据请求
+  }
+  return (
+    <View>
+      <TaroVirtualList
+        autoScrollTop={false}
+        listType="multi"
+        list={list}
+        pageNum={页码}
+        segmentNum={每页的数据量}
+        onRender={renderFunc}
+        scrollViewProps={{
+          onScrollToLower: onPageScrollToLower,
+          lowerThreshold: 50,
+          style: {
+            "height": '100vh',
+          },
+        }}
+      />
+    </View>
+  )
 
-## 该组件适用场景
-1. 页面节点渲染较多（主要是列表页）；
-2. 针对列表页**节点不等高**具有更好的支持；
+}
+```
 
 ## 参数说明
 
@@ -62,7 +95,7 @@ export default function Demo(): JSX.Element {
 | 参数 | 回调参数 | 默认值 | 必填 | 说明 |
 | --- | :----: | ---- | ---- | ------ |
 | onRender | (item, index, segmentIndex) => {}<br>item: 列表的单个数据项的值;<br> index：列表的单个数据项的index;<br>segmentIndex：当前二维数组维度的index | - | 列表的渲染回调，用于自定义列表Item | - | 列表的渲染回调，用于自定义列表Item |
-| onBottom | - | - | 否 | 列表是否已经触底回调 |
+| onBottom | - | - | 否 | 列表是否已经触底回调，注：只有在listType=single时有效 |
 | onComplete | - | - | 否 | 列表是否已经把全部数据加载完成的回调 |
 | onRenderTop | - | - | 否 | 列表上部分内容渲染回调，用于渲染插入虚拟列表上边的内容 |
 | onRenderBottom | - | - | 否 | 列表下部分内容渲染回调，用于渲染插入虚拟列表下边的内容 |
@@ -76,10 +109,19 @@ export default function Demo(): JSX.Element {
 5. 该组件默认支持拿到全部数据进行渲染，如果用户的数据是分页请求的，需要将autoScrollTop参数置为false，否则每请求一次数据，列表就会默认置顶
 6. 设置scrollViewProps参数的时候请注意：
   - 最好给个容器高度
-  - 如果想触发onScrollToLower方法，可以尝试使用onBottom回调代替（因为组件内部已经使用了onScrollToLower方法，如果外部再定义，会导致代码冲突，组件上拉加载失效）
+  - 当listType=single,如果想触发onScrollToLower方法，可以尝试使用onBottom回调代替（因为组件内部已经使用了onScrollToLower方法，如果外部再定义，会导致代码冲突，组件上拉加载失效）
 
 ## 感谢
 如果用着感觉还不错，欢迎赐予一枚star，以此来激励作者输出更多优质代码，造福一方😄
+
+
+## 为啥要开发该组件
+1. 列表页数据量过多，一次性渲染完成后页面节点数量过大，造成页面渲染卡顿，渲染完成之后操作页面数据也会异常卡顿；
+2. 官方虚拟列表（3.2.1）存在一定的渲染bug，特别是针对**列表节点不等高**，存在诸多问题，比如节点闪动、滚动过快造成无限加载、白屏率较高等；
+
+## 该组件适用场景
+1. 页面节点渲染较多（主要是列表页）；
+2. 针对列表页**节点不等高**具有更好的支持；
 
 ## 版本
 #### 1.0.6
