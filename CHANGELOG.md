@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.12](https://github.com/tingyuxuan2302/taro3-virtual-list/compare/v1.0.11...v1.0.12) (2021-08-31)
+
+
+### Bug Fixes
+
+* **virtuallist:** add onRenderLoad ([9906725](https://github.com/tingyuxuan2302/taro3-virtual-list/commit/9906725a218c32ecb9e2ddd3d9c88cf472bb772b))
+
 ### [1.0.11](https://github.com/tingyuxuan2302/taro3-virtual-list/compare/v1.0.10...v1.0.11) (2021-08-27)
 
 
