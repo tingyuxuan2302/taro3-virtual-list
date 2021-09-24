@@ -72,7 +72,7 @@ export default function Demo(): JSX.Element {
           style: {
             "height": '100vh',
           },
-          lowerThreshold: 10,
+          lowerThreshold: 30,
           onScrollToLower: handleScrollToLower,
         }}
       />

@@ -36,7 +36,7 @@ export interface VirtualListProps extends BaseComponent {
   /**
    * 自定义scrollView的参数，会合并到组件内部的scrollView的参数里
    */
-  scrollViewProps?: ScrollViewProps;
+  scrollViewProps?: any;
   /**
    * 列表的渲染回调，用于自定义列表Item
    * @param item 列表的单个数据项的值
