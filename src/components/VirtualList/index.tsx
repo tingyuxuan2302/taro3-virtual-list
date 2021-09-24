@@ -5,7 +5,7 @@ import PropTypes, { InferProps } from 'prop-types'
 import { VirtualListProps, VirtualListState } from "../../../@types/virtualList"
 import { throttle, isH5 } from '../../common/utils'
 
-export default class VirtialList extends Component<VirtualListProps, VirtualListState> {
+export default class VirtualList extends Component<VirtualListProps, VirtualListState> {
   public static propTypes: InferProps<VirtualListProps>
   public static defaultProps: VirtualListProps
 
@@ -343,7 +343,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
   }
 }
 
-VirtialList.defaultProps = {
+VirtualList.defaultProps = {
   list: [],
   pageNum: 1,
   listId: "zt-virtial-list",
@@ -358,7 +358,7 @@ VirtialList.defaultProps = {
   },
 }
 
-VirtialList.propTypes = {
+VirtualList.propTypes = {
   list: PropTypes.array.isRequired,
   listId: PropTypes.string,
   listType: PropTypes.string,
