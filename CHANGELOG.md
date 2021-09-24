@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.13](https://github.com/tingyuxuan2302/taro3-virtual-list/compare/v1.0.12...v1.0.13) (2021-09-24)
+
+
+### Bug Fixes
+
+* **types:** fix types ([660ebf3](https://github.com/tingyuxuan2302/taro3-virtual-list/commit/660ebf39ddecc8d8dea49f27b23dea1803e81147))
+
 ### [1.0.12](https://github.com/tingyuxuan2302/taro3-virtual-list/compare/v1.0.11...v1.0.12) (2021-08-31)
 
 
