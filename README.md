@@ -103,7 +103,7 @@ export default function Demo(): JSX.Element {
 | onGetScrollData | (res) => {} | - | 否 | 获取滚动信息，以传入的listId作为key，默认key是“zt-virtial-list”，目的是让用户可以自定义组件的滚动高度，以此解决<https://github.com/NervJS/taro/issues/8466>的问题 |
 
 ## 注意事项
-1. 组件默认当外部传入的list**引用**发生变更的话，会重新渲染整个列表，如果不想重新渲染，则外部只需要修改list内部对象的属性值即可，不要更换list的**引用地址**
+1. 当listType="single"时，组件默认当外部传入的list**引用**发生变更的话，会重新渲染整个列表，如果不想重新渲染，则外部只需要修改list内部对象的属性值即可，不要更换list的**引用地址**
 2. 如果想禁止组件内部自动滚动至顶部的功能，将autoScrollTop置为false，此时需要用户手动控制列表滚动高度，可通过onGetScrollData回调获取当前列表滚动数据，注意该数据结构有所不同噢
 3. 当遇到**服务端分页请求**获得list的情况，**listType**，**pageNum**，**segmentNum**必传，**autoScrollTop**置为false，在**scrollViewProps**中传入**onScrollToLower**函数
 4. onRenderBottom渲染的内容会在虚拟列表所有数据渲染完成之后才会调用
