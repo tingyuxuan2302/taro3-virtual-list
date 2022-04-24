@@ -29,7 +29,7 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: VirtualListProps): void {
-    const { list, listType } = this.props
+    const { list, listType, pageNum: oldPageNUm = 1 } = this.props
     if (listType === "single") {
       // 提前把innerScrollTop置为不是0，防止列表置顶失效
       this.setState({
@@ -52,8 +52,32 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         })
       }
     } else if (listType === "multi") {
+      const { pageNum = 1 } = nextProps
       if (JSON.stringify(nextProps.list) !== JSON.stringify(list)) {
-        this.formatMultiList(nextProps.list, nextProps.pageNum)
+        if (pageNum < oldPageNUm && pageNum == 1) {
+          this.initList = []
+          this.setState({
+            innerScrollTop: 1,
+          })
+          this.setState({
+            wholePageIndex: 0,
+            isComplete: false,
+            twoList: [],
+          }, () => {
+            if (nextProps.list?.length) {
+              this.formatMultiList(nextProps.list, pageNum)
+            } else {
+              this.handleComplete()
+            }
+          })
+          Taro.nextTick(() => {
+            this.setState({
+              innerScrollTop: 0,
+            })
+          })
+        } else {
+          this.formatMultiList(nextProps.list, pageNum)
+        }
       }
     }
     if (!nextProps.list?.length) {
