@@ -1,1 +1,1 @@
-export { default as TaroVirtualList } from './virtualList'
+export { default as TaroVirtualList } from './VirtualList'
