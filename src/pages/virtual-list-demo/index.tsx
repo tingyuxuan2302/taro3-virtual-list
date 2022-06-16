@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { View } from '@tarojs/components'
+import { View, Button } from '@tarojs/components'
 import ZtVirtualList from '../../components/VirtualList'
 
 import './index.scss'
 
+interface Item {
+  index: number
+  number: number
+}
+
 export default function Demo(): JSX.Element {
-  const [list, setList] = useState<number[]>([])
+  const [list, setList] = useState<Item[]>([])
   const [pageNum, setPageNum] = useState(1)
 
   useEffect(() => {
-    const arr: number[] = []
+    const arr: Item[] = []
     Array(10).fill(0).forEach((item, index) => {
-      arr.push(index)
+      arr.push({
+        index,
+        number: 0,
+      })
     })
     setList(arr)
   }, [])
@@ -27,9 +35,16 @@ export default function Demo(): JSX.Element {
   //     isBottom: status,
   //   })
   // }
+  const add = (index) => {
+    const _list = [...list]
+    _list[index]['index']++
+    setList(_list)
+  }
   const renderFunc = (item, index, pageIndex) => {
     return (
-      <View className="el" key={item}>{`当前是第${item}个元素，是第${pageIndex}屏的数据`}</View>
+      <View className="el" key={pageIndex + 10}>{`当前是第${item.index}个元素，是第${pageIndex}屏的数据`}
+        <Button onClick={() => add(index)}>+</Button>
+      </View>
     )
   }
   // const handleBottom = () => {
@@ -42,9 +57,12 @@ export default function Demo(): JSX.Element {
   //   console.log('scroll-data', e)
   // }
   const handleScrollToLower = () => {
-    const arr: number[] = []
+    const arr: Item[] = []
     Array(10).fill(0).forEach((item, index) => {
-      arr.push(list.length + index)
+      arr.push({
+        index: list.length + index,
+        number: 0,
+      })
     })
     let _list = [...list]
     _list = _list.concat(arr)
