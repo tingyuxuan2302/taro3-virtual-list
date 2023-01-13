@@ -330,38 +330,40 @@ export default class VirtialList extends Component<VirtualListProps, VirtualList
         {..._scrollViewProps}
         onScroll={this.handleScroll}
       >
-        {onRenderTop?.()}
-        <View className="zt-main-list">
+        <View className="zt-scroll-content">
+          {onRenderTop?.()}
+          <View className="zt-main-list">
+            {
+              twoList?.map((item, pageIndex) => {
+                return (
+                  <View key={pageIndex} data-index={pageIndex} className={`zt-wrap-item wrap_${pageIndex}`}>
+                    {
+                      item?.length > 0 ? (
+                        <Block>
+                          {
+                            item.map((el, index) => {
+                              return onRender?.(el, (pageIndex * segmentNum + index), pageIndex)
+                            })
+                          }
+                        </Block>
+                      ) : (
+                        <View style={{'height': `${item?.height}px`}}></View>
+                      )
+                    }
+                  </View>
+                )
+              })
+            }
+          </View>
           {
-            twoList?.map((item, pageIndex) => {
-              return (
-                <View key={pageIndex} data-index={pageIndex} className={`zt-wrap-item wrap_${pageIndex}`}>
-                  {
-                    item?.length > 0 ? (
-                      <Block>
-                        {
-                          item.map((el, index) => {
-                            return onRender?.(el, (pageIndex * segmentNum + index), pageIndex)
-                          })
-                        }
-                      </Block>
-                    ) : (
-                      <View style={{'height': `${item?.height}px`}}></View>
-                    )
-                  }
-                </View>
-              )
-            })
+            onRenderLoad?.() && (
+              <View className="zt-loading-text">
+                {onRenderLoad()}
+              </View>
+            )
           }
+          {isComplete && onRenderBottom?.()}
         </View>
-        {
-          onRenderLoad?.() && (
-            <View className="zt-loading-text">
-              {onRenderLoad()}
-            </View>
-          )
-        }
-        {isComplete && onRenderBottom?.()}
       </ScrollView>
     )
   }

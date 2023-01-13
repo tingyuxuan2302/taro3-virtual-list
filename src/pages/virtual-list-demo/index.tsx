@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { View, Button } from '@tarojs/components'
 import ZtVirtualList from '../../components/VirtualList'
 
@@ -74,6 +74,16 @@ export default function Demo(): JSX.Element {
   const handleRenderLoad = () => {
     return '数据载入中...'
   }
+  const handleRenderTop = () => {
+    return (<Fragment>
+      <View>sjdlfjslf</View>
+      <View>sjdlfjslf</View>
+      <View>sjdlfjslf</View>
+      <View>sjdlfjslf</View>
+      <View>sjdlfjslf</View>
+      <View className="sticky-box">我是吸顶元素</View>
+    </Fragment>)
+  }
   return (
     <View>
       <ZtVirtualList
@@ -81,6 +91,7 @@ export default function Demo(): JSX.Element {
         pageNum={pageNum}
         segmentNum={10}
         onRender={renderFunc}
+        onRenderTop={handleRenderTop}
         // onBottom={handleBottom}
         onComplete={handleComplete}
         // onGetScrollData={handleGetScrollData}

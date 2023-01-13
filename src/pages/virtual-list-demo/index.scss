@@ -5,3 +5,7 @@
 .el:nth-of-type(2n) {
   height: 600px;
 }
+.sticky-box {
+  top: 0;
+  position: sticky;
+}
